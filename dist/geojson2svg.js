@@ -249,6 +249,9 @@ g2svg.prototype.convertFeature = function(feature,options) {
   opt.attributes = opt.attributes || {};
   opt.attributes.id = opt.attributes.id || feature.id || 
     (feature.properties && feature.properties.id ? feature.properties.id : null);
+  if (opt.featureCallback) {
+    opt.featureCallback( feature, opt.attributes )
+  }
   return this.convertGeometry(feature.geometry,opt);
 };
 g2svg.prototype.convertGeometry = function(geom,options) {
@@ -263,6 +266,9 @@ g2svg.prototype.convertGeometry = function(geom,options) {
     var svgJsons,svgEles;
     if (output.toLowerCase() == 'svg') {
       svgJsons = paths.map(function(path) {
+        if (opt.geometryCallback) {
+          opt.geometryCallback( path, geom.type, opt.attributes )
+        }
         return pathToSvgJson(path,geom.type,opt.attributes,opt);
       });
       svgEles = svgJsons.map(function(json) {
