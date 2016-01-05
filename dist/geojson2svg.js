@@ -266,12 +266,12 @@ g2svg.prototype.convertGeometry = function(geom,options) {
     var svgJsons,svgEles;
     if (output.toLowerCase() == 'svg') {
       svgJsons = paths.map(function(path) {
-        if (opt.geometryCallback) {
-          opt.geometryCallback( path, geom.type, opt.attributes )
-        }
         return pathToSvgJson(path,geom.type,opt.attributes,opt);
       });
       svgEles = svgJsons.map(function(json) {
+        if (opt.geometryCallback) {
+          opt.geometryCallback( json, opt.attributes, geom.type )
+        }
         return jsonToSvgElement(json,geom.type);
       });
       return svgEles;
