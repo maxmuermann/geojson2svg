@@ -258,6 +258,11 @@ g2svg.prototype.convertGeometry = function(geom,options) {
   if(converter[geom.type]) {
     var opt = merge(merge({},this.options), options || {});
     var output = opt.output || 'svg';
+
+    if (opt.geometryCallback) {
+      opt.geometryCallback( geom, opt.attributes )
+    }
+
     var paths = converter[geom.type].call(this,geom,
       this.res,
       {x:this.mapExtent.left,y:this.mapExtent.top},
@@ -269,9 +274,6 @@ g2svg.prototype.convertGeometry = function(geom,options) {
         return pathToSvgJson(path,geom.type,opt.attributes,opt);
       });
       svgEles = svgJsons.map(function(json) {
-        if (opt.geometryCallback) {
-          opt.geometryCallback( json, opt.attributes, geom.type )
-        }
         return jsonToSvgElement(json,geom.type);
       });
       return svgEles;
